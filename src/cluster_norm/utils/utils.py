@@ -1,12 +1,12 @@
 
 import os
-import pickle
 from pprint import pp
-import pandas as pd
-import seaborn as sns
+
+import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 import numpy as np
-import matplotlib.patches as mpatches
+import pandas as pd
+import seaborn as sns
 
 
 def extract_last_word(text):

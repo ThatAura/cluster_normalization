@@ -4,8 +4,8 @@ import json
 from pathlib import Path
 
 import pandas as pd
-
 from cluster_norm.utils.utils import extract_last_word
+
 
 # Path to the prompt datasets
 prompt_datasets = Path("./prompt_datasets/")

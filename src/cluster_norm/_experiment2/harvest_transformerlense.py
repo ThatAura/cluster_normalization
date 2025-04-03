@@ -1,9 +1,9 @@
-import os, sys, gc
+import gc
+import sys
 from pathlib import Path
 
-import torch as t
 import pandas as pd
-from transformers import AutoModelForCausalLM, AutoTokenizer
+import torch as t
 from transformer_lens import HookedTransformer
 
 # os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"

@@ -13,8 +13,8 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 
-from cluster_norm.utils.CCS import CCS
-from cluster_norm.utils.CRC import CRC
+from ..utils.CCS import CCS
+from ..utils.CRC import CRC
 
 from copy import deepcopy
 

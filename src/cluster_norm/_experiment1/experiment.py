@@ -5,12 +5,11 @@ import sys
 
 from transformer_lens import HookedTransformer
 
-from cluster_norm._experiment1.update_prompts import extract_last_word
-from cluster_norm.utils.CCS import CCS
+from update_prompts import extract_last_word
+
 from cluster_norm.utils.train import fit_ccs, fit_crc, fit_logreg
-from cluster_norm.utils.utils import (create_accs_visualization,
-                                      create_accs_visualization_2,
-                                      evaluate_ccs, zero_shot)
+from cluster_norm.utils.utils import (create_accs_visualization_2,
+                           evaluate_ccs)
 
 sys.path.append("../utils/")
 
@@ -84,7 +83,7 @@ def fit_and_evaluate_methods(train_pos, test_pos, train_neg, test_neg, train_lab
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run experiment 1.")
-    parser.add_argument("--model", type=str, default="mistral-7b", help="model to use (default: mistral-7b)")
+    parser.add_argument("--model", type=str, default="meta-llama/Llama-3.2-1B-Instruct", help="model to use (default: mistral-7b)")
     parser.add_argument("--dataset", type=str, default="imdb", help="dataset to use (default: imdb)")
     parser.add_argument("--num_random_words", type=int, default=2, help="number of random words to use (default: 2)")
     parser.add_argument("--n_probes", type=int, default=50, help="number of probes to use (default: 50)")

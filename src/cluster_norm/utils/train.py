@@ -1,17 +1,13 @@
 from copy import deepcopy
-from cluster_norm.utils.CRC import CRC
-from cluster_norm.utils.CCS import CCS
-import numpy as np
 
+import numpy as np
 import torch as t
+from jaxtyping import Float
+from sklearn.linear_model import LogisticRegression
 from torch import Tensor
 
-from sklearn.linear_model import LogisticRegression
-from sklearn.decomposition import PCA
-from sklearn.cluster import HDBSCAN
-
-from jaxtyping import Float
-from typing import Tuple
+from cluster_norm.utils.CCS import CCS
+from cluster_norm.utils.CRC import CRC
 
 
 def fit_logreg(

@@ -11,7 +11,7 @@ from transformer_lens import HookedTransformer
 
 # Set up environment
 os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
-device = t.device("cuda:5" if t.cuda.is_available() else "cpu")
+device = t.device("cuda:0   " if t.cuda.is_available() else "cpu")
 
 
 def harvest_activations(model, file_path, output_dir):
@@ -107,7 +107,7 @@ def harvest_llm_answers(model, prompts, logits_dir, pseudo_labels):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Harvest activations and logits.")
-    parser.add_argument("--model", type=str, default="mistral-7b", help="model to use (default: mistral-7b)")
+    parser.add_argument("--model", type=str, default="meta-llama/Llama-3.2-1B-Instruct", help="model to use (default: mistral-7b)")
     parser.add_argument("--dataset", type=str, default="imdb", help="dataset to use (default: imdb)")
     args = parser.parse_args()
     

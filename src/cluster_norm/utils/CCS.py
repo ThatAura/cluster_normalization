@@ -5,7 +5,7 @@ import torch.nn.functional as F
 
 from sklearn.cluster import HDBSCAN
 from sklearn.decomposition import PCA
-from cluster_norm.utils.norm import normalize_burns, normalize_cluster
+from ..utils.norm import normalize_burns, normalize_cluster
 
 from functools import partial
 from jaxtyping import Float
