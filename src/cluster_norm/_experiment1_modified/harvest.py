@@ -8,10 +8,15 @@ import pandas as pd
 import torch as t
 from tqdm import trange
 from transformer_lens import HookedTransformer
+from huggingface_hub import login
+
+#set huggingFace token
+login(token="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")
 
 # Set up environment
 os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
-device = t.device("cuda:0   " if t.cuda.is_available() else "cpu")
+device = t.device("cuda:0" if t.cuda.is_available() else "cpu")
+
 
 
 def harvest_activations(model, file_path, output_dir):
@@ -110,7 +115,9 @@ if __name__ == "__main__":
     parser.add_argument("--model", type=str, default="meta-llama/Llama-3.2-1B-Instruct", help="model to use (default: Llama-3.2-1B-Instruct)")
     parser.add_argument("--dataset", type=str, default="ml", help="dataset to use (default: ml)")
     args = parser.parse_args()
-    
+    print(t.version.cuda)
+    print(t.cuda.is_available())
+    print(device)
     directory_path = Path("prompt_datasets") / args.dataset
     model = HookedTransformer.from_pretrained(args.model, device=device)
     model.eval()

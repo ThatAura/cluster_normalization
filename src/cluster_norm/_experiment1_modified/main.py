@@ -54,13 +54,13 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    create_prompt_script = "create_prompt_dataset.py"
+    create_prompt_script = "create_prompt_datasets.py"
     harvest_script = "harvest.py"
     experiment_script = "experiment.py"
 
     # Prepara le liste di argomenti per ciascun script
     create_prompt_args = ["--dataset", args.dataset, "--k", str(args.k)]
-    harvest_args = ["--model", args.model, "--dataset", args.dataset, "--num_random_words", str(args.num_random_words)]
+    harvest_args = ["--model", args.model, "--dataset", args.dataset]
     if args.layers:
         harvest_args.extend(["--layers", *map(str, args.layers)])
     experiment_args = ["--model", args.model, "--dataset", args.dataset, "--num_random_words", str(args.num_random_words)]
@@ -68,12 +68,12 @@ if __name__ == "__main__":
     # Esegui create_prompt_dataset
     if run_script(create_prompt_script, create_prompt_args):
         # Esegui harvest
-        if run_script(harvest_script, harvest_args):
+       # if run_script(harvest_script, harvest_args):
             # Esegui experiment
-            run_script(experiment_script, experiment_args)
-        else:
-            print(f"\nL'esecuzione di '{harvest_script}' è fallita.")
-    else:
-        print(f"\nL'esecuzione di '{create_prompt_script}' è fallita.")
+        run_script(experiment_script, experiment_args)
+
+
+    #else:
+       # print(f"\nL'esecuzione di '{create_prompt_script}' è fallita.")
 
     print("\nProcesso sequenziale completato.")
