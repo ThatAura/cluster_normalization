@@ -107,8 +107,8 @@ def harvest_llm_answers(model, prompts, logits_dir, pseudo_labels):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Harvest activations and logits.")
-    parser.add_argument("--model", type=str, default="meta-llama/Llama-3.2-1B-Instruct", help="model to use (default: mistral-7b)")
-    parser.add_argument("--dataset", type=str, default="imdb", help="dataset to use (default: imdb)")
+    parser.add_argument("--model", type=str, default="meta-llama/Llama-3.2-1B-Instruct", help="model to use (default: Llama-3.2-1B-Instruct)")
+    parser.add_argument("--dataset", type=str, default="ml", help="dataset to use (default: ml)")
     args = parser.parse_args()
     
     directory_path = Path("prompt_datasets") / args.dataset
@@ -125,7 +125,7 @@ if __name__ == "__main__":
         logits_dir = Path("logits") / args.model / args.dataset / num_random_words
         activation_dir = Path("activations") / args.model / args.dataset / num_random_words
         
-        # if args.dataset == "imdb":
-        #     pseudo_labels = ["positive", "negative"]
-        # harvest_llm_answers(m, prompt_path, logits_dir, pseudo_labels)
+        #if args.dataset == "ml":
+        #   pseudo_labels = ["Yes", "No"]
+        # harvest_llm_answers(model, prompt_path, logits_dir, pseudo_labels)
         harvest_activations(model, prompt_path, activation_dir)
