@@ -68,12 +68,12 @@ if __name__ == "__main__":
     # Esegui create_prompt_dataset
     if run_script(create_prompt_script, create_prompt_args):
         # Esegui harvest
-       # if run_script(harvest_script, harvest_args):
+        if run_script(harvest_script, harvest_args):
             # Esegui experiment
-        run_script(experiment_script, experiment_args)
-
-
-    #else:
-       # print(f"\nL'esecuzione di '{create_prompt_script}' è fallita.")
+            run_script(experiment_script, experiment_args)
+        else:
+            print(f"\nL'esecuzione di '{harvest_script}' è fallita.")
+    else:
+        print(f"\nL'esecuzione di '{create_prompt_script}' è fallita.")
 
     print("\nProcesso sequenziale completato.")
