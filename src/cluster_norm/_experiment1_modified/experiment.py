@@ -17,7 +17,14 @@ import numpy as np
 import pandas as pd
 import torch as t
 
-runs_folder = r"C:\Users\antco\Desktop\progettoIR\clustering\cluster-normalization\runs\experiment_1"
+# Ottieni la directory dello script corrente
+script_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Risali di un livello (fino a cluster-normalization)
+base_dir = os.path.dirname(script_dir)
+
+# Costruisci il percorso relativo a 'runs/experiment_1'
+runs_folder = os.path.join(base_dir, "runs", "experiment_1")
 
 
 def fit_and_evaluate_methods(train_pos, test_pos, train_neg, test_neg, train_labels, test_labels, test_labels_bs, output_folder, neg_answers=None, pos_answers=None, n_probes=50):
