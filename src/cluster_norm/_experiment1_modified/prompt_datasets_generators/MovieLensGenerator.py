@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 import pandas as pd
-from cluster_norm._experiment1_modified.prompt_datasets_generators.DatasetPromptBuilder import DatasetPromptBuilder
+from DatasetPromptBuilder import DatasetPromptBuilder
 
 class MovieLensBuilder(DatasetPromptBuilder):
     def build(self):
