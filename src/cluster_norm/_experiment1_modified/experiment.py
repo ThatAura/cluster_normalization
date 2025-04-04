@@ -101,7 +101,7 @@ if __name__ == "__main__":
     prompt_folder = Path(f"./prompt_datasets/{args.dataset}")
     prompt_files = list(prompt_folder.glob(f"prompts_{args.num_random_words}*.jsonl"))
 
-    device = t.device("cuda:3" if t.cuda.is_available() else "cpu")
+    device = t.device("cuda:0" if t.cuda.is_available() else "cpu")
     if not args.layers:
         m = HookedTransformer.from_pretrained(args.model, device=device)
         m.eval()
