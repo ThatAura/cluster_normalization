@@ -54,13 +54,13 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    create_prompt_script = "create_prompt_dataset.py"
+    create_prompt_script = "create_prompt_datasets.py"
     harvest_script = "harvest.py"
     experiment_script = "experiment.py"
 
     # Prepara le liste di argomenti per ciascun script
     create_prompt_args = ["--dataset", args.dataset, "--k", str(args.k)]
-    harvest_args = ["--model", args.model, "--dataset", args.dataset, "--num_random_words", str(args.num_random_words)]
+    harvest_args = ["--model", args.model, "--dataset", args.dataset]
     if args.layers:
         harvest_args.extend(["--layers", *map(str, args.layers)])
     experiment_args = ["--model", args.model, "--dataset", args.dataset, "--num_random_words", str(args.num_random_words)]
