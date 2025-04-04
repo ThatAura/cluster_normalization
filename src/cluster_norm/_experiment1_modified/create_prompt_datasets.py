@@ -1,5 +1,5 @@
 import argparse
-from cluster_norm._experiment1_modified.prompt_datasets_generators.MovieLensGenerator import MovieLensBuilder
+from ..cluster_norm._experiment1_modified.prompt_datasets_generators.MovieLensGenerator import MovieLensBuilder
 # eventualmente aggiungi altri builder qui
 
 def get_builder(dataset_name, dataset_path, k):
