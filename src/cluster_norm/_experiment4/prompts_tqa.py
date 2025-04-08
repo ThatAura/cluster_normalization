@@ -22,7 +22,7 @@ Answer: {ANSWER}
 True or false?
 The answer is """
 
-df = pd.read_json("../datasets/truthful_qa.json")
+df = pd.read_json("../_experiment1_modified/datasets/truthful_qa.json")
 
 def get_answers(row, correct):
     answers = []

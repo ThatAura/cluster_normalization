@@ -1,13 +1,13 @@
 import json
 from pathlib import Path
 import pandas as pd
-from DatasetPromptBuilder import DatasetPromptBuilder
+from .DatasetPromptBuilder import DatasetPromptBuilder
 
 class MovieLensBuilder(DatasetPromptBuilder):
     def build(self):
         self.movies_prompt()
-        self.ratings_prompt()
-        self.users_prompt()
+        #self.ratings_prompt()
+        #self.users_prompt()
 
     def _process_dat_to_jsonl(self, dat_path, jsonl_path, process_line_func):
         if jsonl_path.exists():

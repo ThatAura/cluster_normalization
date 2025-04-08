@@ -15,7 +15,7 @@ if __name__ == "__main__":
     parser.add_argument("--dataset", type=str, default="imdb", help="daataset to use (default: imdb)")
     args = parser.parse_args()
 
-    path = Path(f"../datasets/raw/{args.dataset}.jsonl")
+    path = Path(f"../src/cluster_norm/_experiment1_modified/datasets/raw/{args.dataset}.jsonl")
     with open(path, "r") as f:
         dataset = pd.read_json(path, orient="records", lines=True)
         

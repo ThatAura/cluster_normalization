@@ -19,7 +19,7 @@ Claim: {CLAIM}
 True or false?
 The claim is """
 
-df = pd.read_csv("../datasets/common_claim_true_false.csv")
+df = pd.read_csv("../_experiment1_modified/datasets/common_claim_true_false.csv")
 default = []; literal = []; professor = []
 for _, row in df.iterrows():
     for template, prompts in zip([template_default, template_literal, template_professor], [default, literal, professor]):
