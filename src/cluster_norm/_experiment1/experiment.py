@@ -7,11 +7,11 @@ from transformer_lens import HookedTransformer
 
 from update_prompts import extract_last_word
 
-from cluster_norm.utils.train import fit_ccs, fit_crc, fit_logreg
-from cluster_norm.utils.utils import (create_accs_visualization_2,
-                           evaluate_ccs)
+from cluster_norm._experiment1_modified.utils.train import fit_ccs, fit_crc, fit_logreg
+from cluster_norm._experiment1_modified.utils.utils import (create_accs_visualization_2,
+                                                            evaluate_ccs)
 
-sys.path.append("../utils/")
+sys.path.append("../_experiment1_modified/utils/")
 
 import numpy as np
 import pandas as pd

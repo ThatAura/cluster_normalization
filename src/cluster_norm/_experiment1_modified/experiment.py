@@ -5,13 +5,12 @@ import sys
 
 from transformer_lens import HookedTransformer
 from pathlib import Path
-from update_prompts import extract_last_word
+#from update_prompts import extract_last_word
 
-from cluster_norm.utils.train import fit_ccs, fit_crc, fit_logreg
-from cluster_norm.utils.utils import (create_accs_visualization_2,
-                           evaluate_ccs)
+from utils.train import fit_ccs, fit_crc, fit_logreg
+from utils.utils import (create_accs_visualization_2, evaluate_ccs, extract_last_word)
 
-sys.path.append("../utils/")
+sys.path.append("utils/")
 
 import numpy as np
 import pandas as pd

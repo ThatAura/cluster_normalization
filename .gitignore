@@ -3,7 +3,7 @@
 *.pyc
 *.pkl
 logits/
-src/cluster_norm/utils/constants.py
+src/cluster_norm/_experiment1_modified/utils/constants.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

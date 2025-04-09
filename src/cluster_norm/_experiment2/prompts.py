@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from cluster_norm.utils.constants import data_path
+from cluster_norm._experiment1_modified.utils import data_path
 
 
 imdb = pd.read_json(f"{data_path}/_experiment2/imdb.jsonl", orient="records", lines=True)

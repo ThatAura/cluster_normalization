@@ -1,7 +1,6 @@
-import os, sys, gc, pickle
+import os
 from pathlib import Path
 from sklearn.linear_model import LogisticRegression
-from tqdm import tqdm, trange
 
 import numpy as np
 import pandas as pd
@@ -13,8 +12,8 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 
-from ..utils.CCS import CCS
-from ..utils.CRC import CRC
+from cluster_norm._experiment1_modified.utils.CCS import CCS
+from cluster_norm._experiment1_modified.utils import CRC
 
 from copy import deepcopy
 

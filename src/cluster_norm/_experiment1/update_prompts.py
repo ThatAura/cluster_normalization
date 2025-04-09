@@ -1,10 +1,9 @@
 # imports all json files in "./prompt_datasets/ with pathlib:
 
-import json
 from pathlib import Path
 
 import pandas as pd
-from cluster_norm.utils.utils import extract_last_word
+from cluster_norm._experiment1_modified.utils.utils import extract_last_word
 
 
 # Path to the prompt datasets
