@@ -28,15 +28,15 @@ def zero_shot(pos_answers, neg_answers, labels):
     return np.max(zero_shot_accs, axis=0)
 
 
-def _get_def(true_accs, biased_accs):
+def _get_def(true_accs):
     df = pd.DataFrame(columns=["accuracy", "template"])
     accuracies, templates = [], []
     for idx, _ in enumerate(true_accs):
         true_acc = true_accs[idx]
-        biased_acc = biased_accs[idx]
 
-        accuracies.extend([true_acc, biased_acc])
-        templates.extend([f"Default", f"Random Word"])
+
+        accuracies.extend([true_acc])
+        templates.extend([f"Default"])
     
     df["accuracy"] = accuracies
     df["template"] = templates
@@ -46,20 +46,18 @@ def _get_def(true_accs, biased_accs):
 
 def create_accs_visualization_2(viz_data, output_folder, n_probes=50):
     pp(viz_data)
-    non_bs_sent_accs_burns, non_bs_accs_burns = viz_data["non_bs"]["burns"] 
-    bs_sent_accs_burns, bs_accs_burns = viz_data["bs"]["burns"]
+    non_bs_sent_accs_burns, non_bs_accs_burns = viz_data["non_bs"]["burns"]
     
     non_bs_sent_accs_cluster, non_bs_accs_cluster = viz_data["non_bs"]["cluster"]
-    bs_sent_accs_cluster, bs_accs_cluster = viz_data["bs"]["cluster"]
     
-    sent_accs_burns = np.concatenate([non_bs_sent_accs_burns, bs_sent_accs_burns])
-    bs_accs_burns = np.concatenate([non_bs_accs_burns, bs_accs_burns])
+    sent_accs_burns = np.concatenate([non_bs_sent_accs_burns])
+    bs_accs_burns = np.concatenate([non_bs_accs_burns])
     
-    sent_accs_cluster = non_bs_sent_accs_cluster + bs_sent_accs_cluster
-    bs_accs_cluster = non_bs_accs_cluster + bs_accs_cluster
+    sent_accs_cluster = non_bs_sent_accs_cluster
+    bs_accs_cluster = non_bs_accs_cluster
     
-    burns = _get_def(sent_accs_burns, bs_accs_burns)
-    cluster = _get_def(sent_accs_cluster, bs_accs_cluster)    
+    burns = _get_def(sent_accs_burns)
+    cluster = _get_def(sent_accs_cluster)
     
     colours = {"Default:GT": "blue", "Default:Random": "lightblue",
                     "Random:GT": "red", "Random:Random": "lightcoral"}
@@ -128,16 +126,13 @@ def create_accs_visualization(viz_data, method, output_folder, n_probes=50):
     plt.savefig(image_file)    
     
 
-def evaluate_ccs(ccs, test_pos, test_neg, test_labels_sentiment, test_labels_bs):
+def evaluate_ccs(ccs, test_pos, test_neg, test_labels_sentiment):
     sent_accs, bs_accs = [], []
     for probe in ccs.probes:
         preds = ccs.predict(probe, test_pos, test_neg, True)
         sent_acc = (preds == test_labels_sentiment).mean()
         sent_acc = max(sent_acc, 1-sent_acc)
-        bs_acc = (preds == test_labels_bs).mean()
-        bs_acc = max(bs_acc, 1-bs_acc)
         sent_accs.append(sent_acc)
-        bs_accs.append(bs_acc)
         
     return sent_accs, bs_accs
     

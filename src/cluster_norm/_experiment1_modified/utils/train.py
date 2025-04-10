@@ -6,8 +6,8 @@ from jaxtyping import Float
 from sklearn.linear_model import LogisticRegression
 from torch import Tensor
 
-from CCS import CCS
-from CRC import CRC
+from .CCS import CCS
+from .CRC import CRC
 
 
 def fit_logreg(

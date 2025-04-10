@@ -5,7 +5,7 @@ from torch import nn, Tensor
 import torch.nn.functional as F
 
 from sklearn.decomposition import PCA
-from norm import normalize_burns, normalize_cluster
+from .norm import normalize_burns, normalize_cluster
 
 from jaxtyping import Float
 

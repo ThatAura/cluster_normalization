@@ -26,7 +26,7 @@ base_dir = os.path.dirname(script_dir)
 runs_folder = os.path.join(base_dir, "runs", "experiment_1_modified")
 
 
-def fit_and_evaluate_methods(train_pos, test_pos, train_neg, test_neg, train_labels, test_labels, test_labels_bs, output_folder, neg_answers=None, pos_answers=None, n_probes=50):
+def fit_and_evaluate_methods(train_pos, test_pos, train_neg, test_neg, train_labels, test_labels, output_folder, neg_answers=None, pos_answers=None, n_probes=50):
     evals = {}
 
     # Zero Shot
@@ -36,7 +36,6 @@ def fit_and_evaluate_methods(train_pos, test_pos, train_neg, test_neg, train_lab
     # Logistic Regression
     lr = fit_logreg(train_pos, train_neg, train_labels)
     evals["acc_lg"] = lr.score(test_pos-test_neg, test_labels)
-    evals["acc_lg_bs"] = lr.score(test_pos-test_neg, test_labels_bs)
     t.save(lr, f"{output_folder}/lr.pt")
 
     # CRC 
@@ -45,7 +44,6 @@ def fit_and_evaluate_methods(train_pos, test_pos, train_neg, test_neg, train_lab
         t.save(crc, f"{output_folder}/crc_{norm}.pt")
 
         evals[f"acc_crc_{norm}"] = crc.evaluate(test_pos, test_neg, test_labels)
-        evals[f"acc_crc_bs_{norm}"] = crc.evaluate(test_pos, test_neg, test_labels_bs)
     print("evals", evals)
 
     # # CRC 
@@ -72,14 +70,12 @@ def fit_and_evaluate_methods(train_pos, test_pos, train_neg, test_neg, train_lab
             _, ccs = fit_ccs(train_pos, train_neg, train_labels, normalize=norm, n_probes=n_probes)
             t.save(ccs, f"{output_folder}/ccs_{norm}.pt")
 
-        sent_accs, bs_accs = evaluate_ccs(ccs, test_pos, test_neg, test_labels, test_labels_bs)
+        sent_accs = evaluate_ccs(ccs, test_pos, test_neg, test_labels)
         evals[f"ccs_{norm} sent_accs (mean)"] = np.mean(sent_accs)
         evals[f"ccs_{norm} sent_accs (std)"] = np.std(sent_accs)
-        evals[f"ccs_{norm} bs_accs (mean)"] = np.mean(bs_accs)
-        evals[f"ccs_{norm} bs_accs (std)"] = np.std(bs_accs)
         print("evals", evals)
 
-        viz_data[norm] = (sent_accs, bs_accs)
+        viz_data[norm] = (sent_accs)
 
     # create_accs_visualization(viz_data, "ccs", output_folder=output_folder, n_probes=n_probes)
 
@@ -114,7 +110,7 @@ def create_prompt_file_dictionary(dataset, num_random_words):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run experiment 1.")
     parser.add_argument("--model", type=str, default="meta-llama/Llama-3.2-1B-Instruct", help="model to use (default: Llama-3.2-1B-Instruct)")
-    parser.add_argument("--dataset", type=str, default="ml", help="dataset to use (default: ml)")
+    parser.add_argument("--dataset", type=str, default="ml-bk", help="dataset to use (default: ml)")
     parser.add_argument("--num_random_words", type=int, default=5, help="number of random words to use (default: 2)")
     parser.add_argument("--n_probes", type=int, default=50, help="number of probes to use (default: 50)")
     parser.add_argument("--load_from_cache", type=bool, default=True, help="load from cache (default: True)")
@@ -125,10 +121,10 @@ if __name__ == "__main__":
     print(f"""model: {args.model}, dataset: {args.dataset}, num_random_words: {args.num_random_words}, 
               n_probes: {args.n_probes}, load_from_cache: {args.load_from_cache}, layers: {args.layers}, split_ratio: {args.split_ratio}""")
 
-    activations_folder = f"activations/{args.model}/{args.dataset}/{args.num_random_words}"
-    answers_root_folder = f"logits/{args.model}/{args.dataset}/{args.num_random_words}"
+    activations_folder = f"activations/{args.model}/{args.dataset}"
+    answers_root_folder = f"logits/{args.model}/{args.dataset}"
 
-    prompt_file = f"./prompt_datasets/{args.dataset}/moviesPrompts_{args.num_random_words}.jsonl"
+    prompt_file = f"./prompt_datasets/{args.dataset}/movies_books_prompts.jsonl"
 
     prompts = pd.read_json(prompt_file, orient="records", lines=True)
 
@@ -144,8 +140,8 @@ if __name__ == "__main__":
         print("## layer", layer)
         pos = t.load(f"{activations_folder}/{layer}/pos.pt")
         neg = t.load(f"{activations_folder}/{layer}/neg.pt")
-        pos_bs = t.load(f"{activations_folder}/{layer}/pos_bs.pt")
-        neg_bs = t.load(f"{activations_folder}/{layer}/neg_bs.pt")
+        #pos_bs = t.load(f"{activations_folder}/{layer}/pos_bs.pt")
+        #neg_bs = t.load(f"{activations_folder}/{layer}/neg_bs.pt")
 
         # load pickles, so no torch can be used, since they are not tensors
         # pos_answers = pickle.load(open(f"{answers_root_folder}/{layer}/positive_unbiased.pickle", "rb"))
@@ -153,29 +149,24 @@ if __name__ == "__main__":
         # pos_answers_bs = pickle.load(open(f"{answers_root_folder}/{layer}/positive_biased.pickle", "rb"))
         # neg_answers_bs = pickle.load(open(f"{answers_root_folder}/{layer}/negative_biased.pickle", "rb"))
 
-        if args.dataset == "imdb":
-            labels = (prompts["sentiment"] == "positive").values
 
-        last_word = extract_last_word(prompts["template_pos_bs"].iloc[0])
-        labels_bs = prompts["template_pos_bs"].apply(lambda x: x.endswith(last_word)).values  # change this
+        labels = (prompts["partOfDataset"] == "Yes").values
+
+        #last_word = extract_last_word(prompts["template_pos_bs"].iloc[0])
+        #labels_bs = prompts["template_pos_bs"].apply(lambda x: x.endswith(last_word)).values  # change this
 
         perm = t.randperm(len(pos))
         pos, neg = pos[perm], neg[perm]
-        pos_bs, neg_bs = pos_bs[perm], neg_bs[perm]
-        labels, labels_bs = labels[perm], labels_bs[perm]
+        #pos_bs, neg_bs = pos_bs[perm], neg_bs[perm]
+        labels = labels[perm]
 
         viz_data = {}
         for current_run in ["non_bs", "bs"]:
             print("### current_run", current_run)
-            output_folder = f"{runs_folder}/{args.model}/{args.dataset}/{args.num_random_words}/layer_{layer}/{current_run}"
+            output_folder = f"{runs_folder}/{args.model}/{args.dataset}/layer_{layer}/{current_run}"
 
             if not os.path.exists(output_folder):
                 os.makedirs(output_folder)
-            if current_run == "bs":
-                print("bias...")
-                p, n = pos_bs, neg_bs
-                # p_answer, n_answer = pos_answers_bs, neg_answers_bs
-            else:
                 print("no bias...")
                 p, n = pos, neg
                 # p_answer, n_answer = pos_answers, neg_answers
@@ -184,7 +175,7 @@ if __name__ == "__main__":
             train_pos, test_pos = p[:split], p[split:]
             train_neg, test_neg = n[:split], n[split:]
             train_labels, test_labels = labels[:split], labels[split:]
-            train_labels_bs, test_labels_bs = labels_bs[:split], labels_bs[split:]
+            #train_labels_bs, test_labels_bs = labels_bs[:split], labels_bs[split:]
 
             evals, viz_method = fit_and_evaluate_methods(train_pos=train_pos,
                                                          test_pos=test_pos,
@@ -192,7 +183,6 @@ if __name__ == "__main__":
                                                          test_neg=test_neg,
                                                          train_labels=train_labels,
                                                          test_labels=test_labels,
-                                                         test_labels_bs=test_labels_bs,
                                                          # pos_answers=p_answer,
                                                          # neg_answers=n_answer,
                                                          n_probes=args.n_probes,

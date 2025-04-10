@@ -44,13 +44,12 @@ def harvest_activations(model, file_path, output_dir):
 
         # Process each template
         for c in ["pos", "neg"]:
-            for test in ["", "_bs"]:
-                activation_file = output / f"{c}{test}.pt"
+                activation_file = output / f"{c}.pt"
                 if activation_file.exists():
                     # avoid recreating activations if they already exist
                     print(f"Skip: activation_file already exists at {activation_file}")
                 else:
-                    column = f"template_{c}{test}"
+                    column = f"template_{c}"
                     activations = t.zeros(len(templates), model.cfg.d_model) 
                     for i in trange(len(templates), desc=f"Processing {column}"):
                         prompt = templates.at[i, column]
@@ -113,7 +112,7 @@ def harvest_llm_answers(model, prompts, logits_dir, pseudo_labels):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Harvest activations and logits.")
     parser.add_argument("--model", type=str, default="meta-llama/Llama-3.2-1B-Instruct", help="model to use (default: Llama-3.2-1B-Instruct)")
-    parser.add_argument("--dataset", type=str, default="ml", help="dataset to use (default: ml)")
+    parser.add_argument("--dataset", type=str, default="ml-bk", help="dataset to use (default: ml)")
     args = parser.parse_args()
     print(t.version.cuda)
     print(t.cuda.is_available())
@@ -125,12 +124,10 @@ if __name__ == "__main__":
     
     files = directory_path.glob("*.jsonl")
     # sort by lowest number to hights
-    files = sorted(files, key=lambda x: int(x.stem.split("_")[1]))
     for prompt_path in files:
         # Extract 'k' from the filename assuming the format is like 'prompts_32.jsonl'
-        num_random_words = prompt_path.stem.split("_")[1]
-        logits_dir = Path("logits") / args.model / args.dataset / prompt_path.stem.split("_")[0] / num_random_words
-        activation_dir = Path("activations") / args.model / args.dataset / prompt_path.stem.split("_")[0] /num_random_words
+        logits_dir = Path("logits") / args.model / args.dataset / prompt_path.stem.split("_")[0]
+        activation_dir = Path("activations") / args.model / args.dataset / prompt_path.stem.split("_")[0]
         
         #if args.dataset == "ml":
         #   pseudo_labels = ["Yes", "No"]
